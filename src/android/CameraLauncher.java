@@ -803,11 +803,11 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     if (this.allowEdit) {
+                        LOG.e("TEST applicationID:", String.valueOf(applicationId));
+                        LOG.e("TEST cordovaActivity:", cordova.getActivity().toString());
                         Uri tmpFile = FileProvider.getUriForFile(cordova.getActivity(),
                                 applicationId + ".provider",
                                 createCaptureFile(this.encodingType));
-                        LOG.e("TEST applicationID:", String.valueOf(applicationId));
-                        LOG.e("TEST cordovaActivity:", cordova.getActivity().toString());
                         LOG.e("TEST Uri tmpFile:", String.valueOf(tmpFile));
                         performCrop(tmpFile, destType, intent);
                     } else {
