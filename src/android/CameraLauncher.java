@@ -760,6 +760,26 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     }
 
     /**
+     * Called when the activity will start interacting with the user.
+     *
+     * @param multitasking		Flag indicating if multitasking is turned on for app
+     */
+    public void onResume(boolean multitasking) {
+        LOG.e("RESUME handled:", String.valueOf(multitasking));
+    }
+
+    /**
+     * Called when the WebView does a top-level navigation or refreshes.
+     *
+     * Plugins should stop any long-running processes and clean up internal state.
+     *
+     * Does nothing by default.
+     */
+    public void onReset() {
+        LOG.e("RESET handled", "");
+    }
+
+    /**
      * Called when the camera view exits.
      *
      * @param requestCode The request code originally supplied to startActivityForResult(),
@@ -1365,7 +1385,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         if (this.imageUri != null) {
             state.putString(IMAGE_URI_KEY, this.imageUri.getFileUri().toString());
         }
-
+        LOG.e("onSaveInstanceState bundle:", state.toString());
         return state;
     }
 
@@ -1390,7 +1410,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             //I have no idea what type of URI is being passed in
             this.imageUri = new CordovaUri(Uri.parse(state.getString(IMAGE_URI_KEY)));
         }
-
+        LOG.e("onRestoreStateForActivityResult bundle:", state.toString());
         this.callbackContext = callbackContext;
     }
 
