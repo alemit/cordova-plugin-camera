@@ -92,6 +92,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     private static final String GET_All = "Get All";
     private static final String CROPPED_URI_KEY = "croppedUri";
     private static final String IMAGE_URI_KEY = "imageUri";
+    private static final String APPLICATION_ID_KEY = "applicationId";
 
     private static final String TAKE_PICTURE_ACTION = "takePicture";
 
@@ -760,15 +761,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     }
 
     /**
-     * Called when the activity will start interacting with the user.
-     *
-     * @param multitasking		Flag indicating if multitasking is turned on for app
-     */
-    public void onResume(boolean multitasking) {
-        LOG.e("RESUME handled:", String.valueOf(multitasking));
-    }
-
-    /**
      * Called when the camera view exits.
      *
      * @param requestCode The request code originally supplied to startActivityForResult(),
@@ -812,13 +804,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             if (resultCode == Activity.RESULT_OK) {
                 try {
                     if (this.allowEdit) {
-                        LOG.e("TEST applicationID:", String.valueOf(applicationId));
-                        LOG.e("TEST cordovaActivity:", cordova.getActivity().toString());
-                        applicationId = "net.infood.app"; // hardcode the app id in order to verify the suspected problem
+                        LOG.i(LOG_TAG, "Value applicationID:" + String.valueOf(applicationId));
+                        LOG.i(LOG_TAG, "Value cordovaActivity:" + cordova.getActivity().toString());
                         Uri tmpFile = FileProvider.getUriForFile(cordova.getActivity(),
                                 applicationId + ".provider",
                                 createCaptureFile(this.encodingType));
-                        LOG.e("TEST Uri tmpFile:", String.valueOf(tmpFile));
+                        LOG.i(LOG_TAG, "Value Uri tmpFile:" + String.valueOf(tmpFile));
                         performCrop(tmpFile, destType, intent);
                     } else {
                         this.processResultFromCamera(destType, intent);
@@ -1375,7 +1366,12 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
         if (this.imageUri != null) {
             state.putString(IMAGE_URI_KEY, this.imageUri.getFileUri().toString());
         }
-        LOG.e("onSaveInstanceState bundle:", state.toString());
+
+        if (this.applicationId != null) {
+            state.putString(APPLICATION_ID_KEY, this.applicationId);
+        }
+
+        LOG.i(LOG_TAG, "onSaveInstanceState bundle:" + state.toString());
         return state;
     }
 
@@ -1400,8 +1396,13 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
             //I have no idea what type of URI is being passed in
             this.imageUri = new CordovaUri(Uri.parse(state.getString(IMAGE_URI_KEY)));
         }
-        LOG.e("onRestoreStateForActivityResult bundle:", state.toString());
+
+        if (state.containsKey(APPLICATION_ID_KEY)) {
+            this.applicationId = state.getString(APPLICATION_ID_KEY);
+        }
+
         this.callbackContext = callbackContext;
+        LOG.i(LOG_TAG, "onRestoreStateForActivityResult bundle:" + state.toString());
     }
 
      /*
