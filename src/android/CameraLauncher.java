@@ -460,6 +460,11 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
           e.printStackTrace();
           LOG.e(LOG_TAG, "Unable to write to file");
       }
+      catch (Exception e)
+      {
+          e.printStackTrace();
+          LOG.e(LOG_TAG, "Some geenral exception happened");
+      }
     }
   }
 
@@ -801,6 +806,9 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                         Uri tmpFile = FileProvider.getUriForFile(cordova.getActivity(),
                                 applicationId + ".provider",
                                 createCaptureFile(this.encodingType));
+                        LOG.e("TEST applicationID:", String.valueOf(applicationId));
+                        LOG.e("TEST cordovaActivity:", cordova.getActivity().toString());
+                        LOG.e("TEST Uri tmpFile:", String.valueOf(tmpFile));
                         performCrop(tmpFile, destType, intent);
                     } else {
                         this.processResultFromCamera(destType, intent);
@@ -808,6 +816,11 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                 } catch (IOException e) {
                     e.printStackTrace();
                     this.failPicture("Error capturing image.");
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    LOG.e(LOG_TAG, "Some geenral exception happened");
                 }
             }
 
