@@ -769,17 +769,6 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
     }
 
     /**
-     * Called when the WebView does a top-level navigation or refreshes.
-     *
-     * Plugins should stop any long-running processes and clean up internal state.
-     *
-     * Does nothing by default.
-     */
-    public void onReset() {
-        LOG.e("RESET handled", "");
-    }
-
-    /**
      * Called when the camera view exits.
      *
      * @param requestCode The request code originally supplied to startActivityForResult(),
@@ -825,6 +814,7 @@ public class CameraLauncher extends CordovaPlugin implements MediaScannerConnect
                     if (this.allowEdit) {
                         LOG.e("TEST applicationID:", String.valueOf(applicationId));
                         LOG.e("TEST cordovaActivity:", cordova.getActivity().toString());
+                        applicationId = "net.infood.app"; // hardcode the app id in order to verify the suspected problem
                         Uri tmpFile = FileProvider.getUriForFile(cordova.getActivity(),
                                 applicationId + ".provider",
                                 createCaptureFile(this.encodingType));
